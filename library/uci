@@ -1,0 +1,36 @@
+#!/bin/sh
+# wrapper for conditional setting of uci config
+# compare http://wiki.openwrt.org/doc/techref/uci
+
+# TODO: add more docs, see http://docs.ansible.com/developing_modules.html
+
+# parameters are command, key, value
+source ${1}
+
+# test if we need to apply a change
+case $command in
+    'set')
+        [ $(uci get "${key}") = "${value}" ]
+        changed=$?
+        ;;
+    'add_list')
+        uci get "$key" 2>/dev/null |grep -q "$value"
+        changed=$?
+        ;;
+    *)
+        echo "{\"failed\": true, \"msg\": \"unsupported command: $command\"}"
+        ;;
+esac
+
+if [ $changed -eq 0 ]
+then
+    echo '{"changed": false}'
+else
+    uci "$command" "$key=$value"
+    cat <<EOF
+{
+    "changed": true,
+    "msg": "executed uci $command $key=$value"
+}
+EOF
+fi

@@ -1,0 +1,5 @@
+---
+- name: uci commit
+  raw: uci commit
+- name: restart wifi
+  raw: wifi

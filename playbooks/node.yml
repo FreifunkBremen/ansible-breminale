@@ -1,0 +1,34 @@
+---
+- hosts: nodes
+
+  tasks:
+  - name: apply wifi24 channel
+    uci: command=set key="wireless.radio0.channel" value={{wifi24_channel}}
+    notify:
+    - uci commit
+    - restart wifi
+
+  - name: apply wifi24 txpower
+    uci: command=set key="wireless.radio0.txpower" value={{wifi24_txpower}}
+    notify:
+    - uci commit
+    - restart wifi
+
+  - name: apply wifi5 channel
+    uci: command=set key="wireless.radio1.channel" value={{wifi5_channel}}
+    notify:
+    - uci commit
+    - restart wifi
+
+  - name: apply wifi5 txpower
+    uci: command=set key="wireless.radio1.txpower" value={{wifi5_txpower}}
+    notify:
+    - uci commit
+    - restart wifi
+
+
+  handlers:
+  - name: uci commit
+    raw: uci commit
+  - name: restart wifi
+    raw: wifi
