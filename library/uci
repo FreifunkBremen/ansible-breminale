@@ -1,36 +1,41 @@
-#!/bin/sh
-# wrapper for conditional setting of uci config
-# compare http://wiki.openwrt.org/doc/techref/uci
+#!/usr/bin/lua
+--
+-- Ansible module for LUCI
+--
 
-# TODO: add more docs, see http://docs.ansible.com/developing_modules.html
+require("uci")
+x = uci.cursor()
 
-# parameters are command, key, value
-source ${1}
+command = os.getenv("command")
+key     = os.getenv("key")
+value   = os.getenv("value")
 
-# test if we need to apply a change
-case $command in
-    'set')
-        [ $(uci get "${key}") = "${value}" ]
-        changed=$?
-        ;;
-    'add_list')
-        uci get "$key" 2>/dev/null |grep -q "$value"
-        changed=$?
-        ;;
-    *)
-        echo "{\"failed\": true, \"msg\": \"unsupported command: $command\"}"
-        ;;
-esac
+if not key then
+  print("key is nil")
+  os.exit(1)
+end
 
-if [ $changed -eq 0 ]
-then
-    echo '{"changed": false}'
+if not value then
+  print("value is nil")
+  os.exit(1)
+end
+
+-- split key
+config, section, option = string.match(key, "([^\.]+)\.([^\.]+)\.([^\.]+)")
+
+if command=="set" then
+  if old == value then
+    print('{"changed": false}')
+  else
+    if not x:get(config, section) then
+      print('{"failed": true, "msg": "section not found"}')
+      os.exit(2)
+    end
+
+    x:set(config, section, option, value)
+    x:commit(config)
+    print('{"changed": true}')
+  end
 else
-    uci "$command" "$key=$value"
-    cat <<EOF
-{
-    "changed": true,
-    "msg": "executed uci $command $key=$value"
-}
-EOF
-fi
+  print('{"failed": true, "msg": "unsupported command: ' + command + '"}')
+end
