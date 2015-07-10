@@ -6,27 +6,44 @@
 require("uci")
 x = uci.cursor()
 
-command = os.getenv("command")
-key     = os.getenv("key")
-value   = os.getenv("value")
-
 fail = function (msg)
   print('{"failed": true, "msg": "' .. msg .. '"}')
   os.exit(1)
 end
 
-if not key then
-  fail("key is missing")
+-- read input
+f = io.open(arg[1], "r")
+line = f:read("*all")
+f:close()
+
+-- split input into command and arguments
+i = string.find(line, " ")
+if not i then
+  fail("unable to parse arguments")
 end
+command = string.sub(line,0,i-1)
+args    = string.sub(line,i+1)
 
-if not value then
-  fail("value is missing")
-end
-
--- split key
-config, section, option = string.match(key, "([^\.]+)\.([^\.]+)\.([^\.]+)")
-
+-- evaluate commands
 if command=="set" then
+
+  i = string.find(args, "=", i)
+  if not i then
+    fail("unable to parse key-value pair")
+  end
+  key   = string.sub(args,0,i-1)
+  value = string.sub(args,i+1)
+
+  if not key then
+    fail("key is missing")
+  end
+
+  if not value then
+    fail("value is missing")
+  end
+
+  -- split key
+  config, section, option = string.match(key, "([^\.]+)\.([^\.]+)\.([^\.]+)")
   old = x:get(config, section, option)
   if old == value then
     print('{"changed": false}')

@@ -1,4 +1,4 @@
 
 [nodes]
 
-node ansible_ssh_host=fe80::eade:27ff:fe65:cfda%eth0 wifi24_channel=6 wifi5_channel=140 wifi24_txpower=10 wifi5_txpower=10
+node ansible_ssh_host=2a00:c380:dead:0:ea94:f6ff:fef2:fcde wifi24_channel=9 wifi5_channel=140 wifi24_txpower=20 wifi5_txpower=20
