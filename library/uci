@@ -10,26 +10,29 @@ command = os.getenv("command")
 key     = os.getenv("key")
 value   = os.getenv("value")
 
-if not key then
-  print("key is nil")
+fail = function (msg)
+  print('{"failed": true, "msg": "' .. msg .. '"}')
   os.exit(1)
 end
 
+if not key then
+  fail("key is missing")
+end
+
 if not value then
-  print("value is nil")
-  os.exit(1)
+  fail("value is missing")
 end
 
 -- split key
 config, section, option = string.match(key, "([^\.]+)\.([^\.]+)\.([^\.]+)")
 
 if command=="set" then
+  old = x:get(config, section, option)
   if old == value then
     print('{"changed": false}')
   else
     if not x:get(config, section) then
-      print('{"failed": true, "msg": "section not found"}')
-      os.exit(2)
+      fail("section not found")
     end
 
     x:set(config, section, option, value)
@@ -37,5 +40,5 @@ if command=="set" then
     print('{"changed": true}')
   end
 else
-  print('{"failed": true, "msg": "unsupported command: ' + command + '"}')
+  fail("unsupported command: " .. command)
 end
