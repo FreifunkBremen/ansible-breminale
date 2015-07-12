@@ -11,6 +11,15 @@ fail = function (msg)
   os.exit(1)
 end
 
+changed = function (value)
+  if value then
+    print('{"changed": true}')
+  else
+    print('{"changed": false}')
+    end
+  os.exit(0)
+end
+
 -- read input
 f = io.open(arg[1], "r")
 line = f:read("*all")
@@ -43,19 +52,29 @@ if command=="set" then
   end
 
   -- split key
-  config, section, option = string.match(key, "([^\.]+)\.([^\.]+)\.([^\.]+)")
-  old = x:get(config, section, option)
-  if old == value then
-    print('{"changed": false}')
+  config, section = string.match(key, "^([^\.]+)\.([^\.]+)$")
+
+  if config and section then
+    -- create section
+    if x:get(config, section) then
+      changed(false)
+    end
+    x:set(config, section, value)
   else
+    -- set value in existing section
+    config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
+    old = x:get(config, section, option)
+    if old == value then
+      changed(false)
+    end
     if not x:get(config, section) then
       fail("section not found")
     end
-
     x:set(config, section, option, value)
-    x:commit(config)
-    print('{"changed": true}')
   end
+
+  x:commit(config)
+  changed(true)
 else
   fail("unsupported command: " .. command)
 end
