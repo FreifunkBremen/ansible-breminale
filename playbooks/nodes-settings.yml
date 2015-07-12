@@ -1,34 +1,6 @@
+# ansible-playbook playbooks/nodes-settings.yml -e "mgmt_key=SECRETKEY"
 ---
 - hosts: nodes
-
-  tasks:
-  - name: apply wifi24 channel
-    uci: set wireless.radio0.channel={{wifi24_channel}}
-    notify:
-    - uci commit
-    - restart wifi
-
-  - name: apply wifi24 txpower
-    uci: set wireless.radio0.txpower={{wifi24_txpower}}
-    notify:
-    - uci commit
-    - restart wifi
-
-  - name: apply wifi5 channel
-    uci: set wireless.radio1.channel={{wifi5_channel}}
-    notify:
-    - uci commit
-    - restart wifi
-
-  - name: apply wifi5 txpower
-    uci: set wireless.radio1.txpower={{wifi5_txpower}}
-    notify:
-    - uci commit
-    - restart wifi
-
-
-  handlers:
-  - name: uci commit
-    raw: uci commit
-  - name: restart wifi
-    raw: wifi
+  gather_facts: no
+  roles:
+  - node-settings
