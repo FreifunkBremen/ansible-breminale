@@ -1,0 +1,23 @@
+---
+- name: Install python-apt
+  raw: apt-get install python-apt -y
+
+- name: Disable insecure authentication methods
+  lineinfile:
+    dest=/etc/ssh/sshd_config
+    regexp="^#?{{item}}"
+    line="{{item}} no"
+    state=present
+  with_items:
+  - ChallengeResponseAuthentication
+  - PasswordAuthentication
+  notify:
+    - restart ssh
+
+- name: Delete ecdsa host key
+  file: path=/etc/ssh/{{item}} state=absent
+  with_items:
+  - ssh_host_ecdsa_key
+  - ssh_host_ecdsa_key.pub
+  notify:
+    - restart ssh

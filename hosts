@@ -1,3 +1,7 @@
+[servers]
+kvm        ansible_ssh_host=kvm.breminale.digineo.de
+monitoring ansible_ssh_host=monitoring.breminale.digineo.de
+vpn        ansible_ssh_host=vpn.breminale.digineo.de
 
 [nodes]
 

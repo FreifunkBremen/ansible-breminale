@@ -1,0 +1,14 @@
+---
+- name: Create user
+  user: name=monitoring home=/var/www/monitoring shell=/bin/bash group=users
+
+- name: Remove default page
+  file: path=/var/www/html state=absent
+
+- name: Upload monitoring vhost config
+  template: src=monitoring.conf dest=/etc/apache2/sites-available/monitoring.conf
+  notify: reload apache2
+
+- name: Enable monitoring site
+  file: dest=/etc/apache2/sites-enabled/monitoring.conf src=../sites-available/monitoring.conf state=link
+  notify: reload apache2
