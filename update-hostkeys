@@ -1,0 +1,24 @@
+#!/bin/sh
+
+prefix=2a00:c380:dead::
+macs="
+64:66:b3:47:56:fa
+64:66:b3:8a:61:f8
+64:70:02:ba:03:0a
+64:70:02:e2:8f:3c
+90:f6:52:e9:ce:4e
+c0:4a:00:8d:71:3c
+e8:94:f6:b6:95:7a
+e8:94:f6:f2:fc:de
+e8:94:f6:f3:01:73
+e8:94:f6:f3:02:51
+e8:de:27:65:cf:da
+"
+
+for mac in $macs; do
+  addr=`ipv6calc "$mac" -O eui64 2> /dev/null`
+  host=$prefix$addr
+
+  ssh-keygen -f "$HOME/.ssh/known_hosts" -R $host 2> /dev/null > /dev/null
+  ssh -o StrictHostKeyChecking=no root@$host true
+done
