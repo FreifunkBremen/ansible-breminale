@@ -6,10 +6,11 @@
 - name: set wan_radio0
   uci: set wireless.wan_radio0.{{item.key}}={{item.value}}
   with_items:
-  - { key: network, value: wan    }
-  - { key: device,  value: radio0 }
-  - { key: mode,    value: ap     }
-  - { key: ssid,    value: mgmt   }
+  - { key: network,    value: wan    }
+  - { key: device,     value: radio0 }
+  - { key: mode,       value: ap     }
+  - { key: ssid,       value: mgmt   }
+  - { key: encryption, value: psk2   }
   notify:
   - restart wifi
 
