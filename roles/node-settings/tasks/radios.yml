@@ -1,21 +1,23 @@
 # Configure radios
 ---
 - name: apply wifi24 channel
-  uci: set wireless.radio0.channel={{ channels_24 | shuffle | first }}
+  uci: set wireless.radio0.channel={{wifi24_channel}}
   notify:
   - restart wifi
 
 - name: apply wifi24 txpower
-  uci: set wireless.radio0.txpower=20
+  uci: set wireless.radio0.txpower={{wifi24_txpower}}
+  tags: txpower
   notify:
   - restart wifi
 
 - name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
+  uci: set wireless.radio1.channel={{wifi5_channel}}
   notify:
   - restart wifi
 
 - name: apply wifi5 txpower
-  uci: set wireless.radio1.txpower=20
+  uci: set wireless.radio1.txpower={{wifi5_txpower}}
+  tags: txpower
   notify:
   - restart wifi
