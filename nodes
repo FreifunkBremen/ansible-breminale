@@ -5,14 +5,10 @@
 # $ ansible nodes -m sh_ping -i nodes
 #
 
-import urllib
+from sys import path
+path.append("lib")
+
+import hosts
 import json
 
-network  = "2a00:c380:dead::"
-response = urllib.urlopen("http://monitoring.breminale.digineo.de/json/ansible")
-result   = json.loads(response.read())
-
-for value in result['_meta']['hostvars'].itervalues():
-  value['ansible_ssh_host'] = value['ansible_ssh_host'].replace("fe80::",network)
-
-print json.dumps(result)
+print json.dumps(hosts.load())
