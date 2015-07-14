@@ -20,12 +20,8 @@ def worker():
     while True:
         host = queue.get()
 
-        # Remove from known_hosts
-        os.system("ssh-keygen -f " + known_hosts + " -R " + host + " 2> /dev/null > /dev/null")
-
         # Add to known_hosts
-        if os.system("ssh -o StrictHostKeyChecking=no -o HashKnownHosts=no root@" + host + " true") == 0:
-            print(host)
+        os.system("ssh -o StrictHostKeyChecking=no -o HashKnownHosts=no root@" + host + " true")
 
         queue.task_done()
 
@@ -38,7 +34,13 @@ for i in range(num_threads):
 
 # Fill queue
 for value in hosts.load()['_meta']['hostvars'].itervalues():
-    queue.put(value['ansible_ssh_host'])
+    host = value['ansible_ssh_host']
+
+    # Remove from known_hosts
+    for addr in [host, host.replace("::",":0:")]:
+        os.system("ssh-keygen -f " + known_hosts + " -R " + addr + " 2> /dev/null > /dev/null")
+
+    queue.put(host)
 
 # block until all tasks are done
 queue.join()
