@@ -1,8 +1,18 @@
 [servers]
 kvm        ansible_ssh_host=kvm.breminale.digineo.de
 monitoring ansible_ssh_host=monitoring.breminale.digineo.de
+eyk        ansible_ssh_host=eyk.breminale.digineo.de
 vpn        ansible_ssh_host=vpn.breminale.digineo.de
 
 [nodes]
 
-node ansible_ssh_host=2a00:c380:dead:0:ea94:f6ff:fef2:fcde wifi24_channel=9 wifi5_channel=140 wifi24_txpower=20 wifi5_txpower=20
+61f8 ansible_ssh_host=2a00:c380:dead::6666:b3ff:fe8a:61f8 wifi24_txpower=3 wifi5_txpower=20
+030a ansible_ssh_host=2a00:c380:dead::6670:02ff:feba:030a wifi24_txpower=3 wifi5_txpower=20
+8f3c ansible_ssh_host=2a00:c380:dead::6670:02ff:fee2:8f3c wifi24_txpower=3 wifi5_txpower=20
+ce4e ansible_ssh_host=2a00:c380:dead::92f6:52ff:fee9:ce4e wifi24_txpower=3 wifi5_txpower=20
+713c ansible_ssh_host=2a00:c380:dead::c24a:00ff:fe8d:713c wifi24_txpower=3 wifi5_txpower=20
+957a ansible_ssh_host=2a00:c380:dead::ea94:f6ff:feb6:957a wifi24_txpower=3 wifi5_txpower=20
+0173 ansible_ssh_host=2a00:c380:dead::ea94:f6ff:fef3:0173 wifi24_txpower=3 wifi5_txpower=20
+0251 ansible_ssh_host=2a00:c380:dead::ea94:f6ff:fef3:0251 wifi24_txpower=3 wifi5_txpower=20
+0254 ansible_ssh_host=2a00:c380:dead::ea94:f6ff:fef3:0254 wifi24_txpower=3 wifi5_txpower=20
+cfda ansible_ssh_host=2a00:c380:dead::eade:27ff:fe65:cfda wifi24_txpower=3 wifi5_txpower=20
