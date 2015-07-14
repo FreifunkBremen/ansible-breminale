@@ -68,7 +68,7 @@ if command=="set" then
       changed(false)
     end
     if not x:get(config, section) then
-      fail("section not found")
+      fail("section " .. section .. " not found")
     end
     x:set(config, section, option, value)
   end
