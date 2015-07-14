@@ -1,6 +1,9 @@
 ---
+- include: info.yml
+  tags: info
+
 - include: radios.yml
   tags: radios
 
-- include: mgmt.yml
-  tags: mgmt
+#- include: mgmt.yml
+#  tags: mgmt
