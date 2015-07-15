@@ -1,4 +1,3 @@
-# Configure radios
 ---
 - name: Set gluon-node-info
   raw: |
