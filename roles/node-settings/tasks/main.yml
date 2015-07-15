@@ -21,3 +21,9 @@
   tags: txpower
   notify:
   - restart wifi
+
+- name: apply wifi5 htmode
+  uci: set wireless.radio1.htmode=HT20
+  tags: htmode
+  notify:
+  - restart wifi
