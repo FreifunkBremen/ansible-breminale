@@ -3,9 +3,9 @@ Breminale-Ansible
 
 ## Kommandos
 
-### ~/.ssh/known_hosts aktualisieren
+### ~/.ssh/known_hosts aktualisieren (legacy)
 
-    ./update-hostkeys.ph
+    ./update-hostkeys.py
 
 ### Node-Settings aktualisieren
 
