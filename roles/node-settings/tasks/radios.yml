@@ -1,7 +1,7 @@
 # Configure radios
 ---
 - name: apply wifi24 channel
-  uci: set wireless.radio0.channel={{radio24_channel}}
+  uci: set wireless.radio0.channel={{ channels_24 | shuffle | first }}
   notify:
   - restart wifi
 
@@ -12,7 +12,7 @@
   - restart wifi
 
 - name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{radio5_channel}}
+  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
   notify:
   - restart wifi
 
