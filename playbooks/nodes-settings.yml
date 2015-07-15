@@ -1,4 +1,4 @@
-# ansible-playbook playbooks/nodes-settings.yml -e "mgmt_key=SECRETKEY"
+# ansible-playbook playbooks/nodes-settings.yml -i nodes
 ---
 - hosts: nodes
   gather_facts: no
