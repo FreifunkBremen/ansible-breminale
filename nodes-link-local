@@ -1,0 +1,27 @@
+#!/usr/bin/env python
+#
+# Dynamic inventory script that lists nodes by Multicast
+#
+# $ ansible nodes -m sh_ping -i nodes-link-local
+#
+
+import json
+import re
+import os
+import subprocess
+
+iface    = os.environ.get('IFACE', "wlan0")
+output   = subprocess.check_output(["ping6","ff02::1%"+iface,"-Lnc 2"])
+nodes    = []
+hostvars = {}
+exclude  = 
+
+for host in re.findall('from ([\da-f:]+): ', output):
+  name = host.split("fe80::",2)[1].replace(":","")
+  nodes.append(name)
+  hostvars[name] = {
+    "ansible_ssh_host": host+"%"+iface,
+  }
+
+
+print json.dumps({"nodes": nodes, "_meta": {"hostvars": hostvars}})
