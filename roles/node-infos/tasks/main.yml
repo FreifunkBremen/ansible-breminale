@@ -1,7 +1,10 @@
 ---
 - name: Set gluon-node-info
   raw: |
-   uci set "gluon-node-info.@location[0].latitude={{geo_latitude}}"
-   uci set "gluon-node-info.@location[0].longitude={{geo_longitude}}"
-   uci set "gluon-node-info.@location[0].share_location=1"
-   uci commit gluon-node-info
+    uci batch <<UCI
+      set "system.@system[0].hostname=Breminale-{{node_name.replace(" ","-")}}"
+      set "gluon-node-info.@location[0].latitude={{geo_latitude}}"
+      set "gluon-node-info.@location[0].longitude={{geo_longitude}}"
+      set "gluon-node-info.@location[0].share_location=1"
+      commit
+    UCI
