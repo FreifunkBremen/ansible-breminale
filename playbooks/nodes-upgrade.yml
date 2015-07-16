@@ -1,22 +1,12 @@
+#
+# mirror with:
+# wget -m http://tmp.jplitza.de/breminale/factory/
+#
+# run with:
+# ansible-playbook playbooks/nodes-upgrade.yml -i nodes -vv -e "firmware_path=/path/to/tmp.jplitza.de/breminale/"
+#
 ---
 - hosts: nodes
   gather_facts: no
-
-  tasks:
-  - name: Fetch release
-    raw: cat /lib/gluon/release
-    register: gluon_release
-
-  - name: Fetch model
-    raw: cat /tmp/sysinfo/model
-    register: model
-
-#  - debug: var=gluon_release.stdout_lines[0]
-
-  # wget http://tmp.jplitza.de/breminale/sysupgrade/gluon-ffhb-2015.1.1+breminale2-$(tr 'A-Z ' 'a-z-' < /tmp/sysinfo/model)-sysupgrade.bin
-  - name: Upgrade firmware
-    when: gluon_release.stdout_lines == ["2015.1.1+breminale1"]
-    raw: |
-      cd /tmp
-      wget http://tmp.jplitza.de/breminale/sysupgrade/gluon-ffhb-2015.1.1+breminale2-{{ model.stdout.strip().replace(" ","-").lower() }}-sysupgrade.bin
-      sysupgrade -n gluon-*.bin
+  roles:
+  - node-upgrade

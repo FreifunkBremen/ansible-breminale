@@ -1,0 +1,14 @@
+---
+- name: Fetch release
+  raw: cat /lib/gluon/release
+  register: gluon_release
+
+- name: Fetch model
+  raw: cat /tmp/sysinfo/model
+  register: model
+
+- debug: var=gluon_release.stdout_lines[0]
+- debug: var=model.stdout_lines[0]
+
+- include: upgrade.yml
+  when: '"TL-WDR" in model.stdout_lines[0] and gluon_release.stdout_lines[0] in ["2015.1.1+breminale1","2015.1.1+breminale2"]'
