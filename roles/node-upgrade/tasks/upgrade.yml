@@ -2,5 +2,8 @@
 - name: Upload firmware
   action: copy_unsafe src={{firmware_path}}/sysupgrade/gluon-ffhb-2015.1.1+breminale3-{{ model.stdout.strip().replace(" ","-").lower() }}-sysupgrade.bin dest=/tmp/sysupgrade.bin
 
+- name: Install nohup
+  raw: opkg update && opkg install coreutils-nohup
+
 - name: Upgrade firmware
-  raw: sysupgrade -n /tmp/sysupgrade.bin
+  raw: nohup sysupgrade -n /tmp/sysupgrade.bin&
