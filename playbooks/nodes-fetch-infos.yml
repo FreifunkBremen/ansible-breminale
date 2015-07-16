@@ -1,0 +1,9 @@
+# ansible-playbook playbooks/nodes-fetch-infos.yml -i nodes
+---
+- hosts: nodes
+  gather_facts: no
+  tasks:
+  - uci: get wireless.radio0.channel
+  - debug: msg={{wireless.radio0.channel}}
+  - uci: get wireless.radio1.channel
+  - debug: msg={{wireless.radio1.channel}}
