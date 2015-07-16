@@ -1,0 +1,12 @@
+---
+- name: Fetch uname
+  raw: uname -a
+  register: uname
+
+- name: Fetch iw reg
+  raw: iw reg set US && iw reg get
+  register: iw_reg
+
+- name: Include patch
+  include: patch.yml
+  when: '" mips " in uname.stdout and "DFS-UNSET" not in iw_reg.stdout'
