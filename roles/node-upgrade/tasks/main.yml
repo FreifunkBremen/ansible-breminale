@@ -11,4 +11,4 @@
 - debug: var=model.stdout_lines[0]
 
 - include: upgrade.yml
-  when: '"TL-WDR" in model.stdout_lines[0] and gluon_release.stdout_lines[0] in ["2015.1.1+breminale1","2015.1.1+breminale2"]'
+  when: '"TL-WDR" in model.stdout_lines[0] and gluon_release.stdout_lines[0] in firmware_old'
