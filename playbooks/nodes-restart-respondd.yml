@@ -1,0 +1,11 @@
+# restart respondd if not running
+---
+- hosts: nodes
+  gather_facts: no
+  tasks:
+  - raw: pgrep respondd
+    register: pgrep
+    ignore_errors: True
+
+  - raw: /etc/init.d/respondd start
+    when: pgrep.rc != 0

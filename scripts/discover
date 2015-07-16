@@ -30,16 +30,20 @@ signal.signal(signal.SIGINT, signal_handler)
 
 while True:
   cache         = hosts.getCached()
-  hostvars      = cache['_meta']['hostvars'].itervalues()
-  hosts_by_addr = dict([(host['ansible_ssh_host'], host) for host in hostvars])
+  hostvars      = cache['_meta']['hostvars'].iteritems()
+  hosts_by_addr = dict([(host['ansible_ssh_host'], host) for name,host in hostvars])
   addresses     = re.findall(r'(fe80::\S*): .* time=([0-9\.]+) ms ', os.popen("ping6 -L -I " + device + " ff02::1 -c 2").read())
+
+  print(hosts_by_addr)
 
   found = []
   for (addr,ms) in addresses:
     host = hosts_by_addr.get(addr)
-    if host is not None:
-      host['ms'] = float(ms)
-      found.append(host)
+
+    if host is None:
+      host = {"ansible_ssh_host": addr}
+    host['ms'] = float(ms)
+    found.append(host)
 
   # Clear screen
   os.system("clear")
@@ -47,6 +51,9 @@ while True:
   print("%i Hosts found\n" % len(found))
 
   for host in found:
-    print("%-27s %0.3f %s" % (host['ansible_ssh_host'], host['ms'], host['node_name']))
+    if "node_name" in host:
+      print("%-27s %0.3f %i,%i %s" % (host['ansible_ssh_host'], host['ms'], host['radio24_channel'], host['radio5_channel'], host['node_name']))
+    else:
+      print("%-27s %0.3f" % (host['ansible_ssh_host'], host['ms']))
 
   time.sleep(1)
