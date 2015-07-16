@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+#
+# Displays reachable nodes
+#
+
+from sys import path
+path.append("lib")
+
+import time
+import signal
+import hosts
+import re
+import os
+import sys
+
+if len(sys.argv) != 2:
+  sys.stderr.write("usage: %s interface\n" % sys.argv[0])
+  sys.exit(1)
+
+
+device = sys.argv[1]
+
+
+def signal_handler(signal, frame):
+  print 'Good bye!'
+  sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+
+
+while True:
+  cache         = hosts.getCached()
+  hostvars      = cache['_meta']['hostvars'].itervalues()
+  hosts_by_addr = dict([(host['ansible_ssh_host'], host) for host in hostvars])
+  addresses     = re.findall(r'(fe80::\S*): .* time=([0-9\.]+) ms ', os.popen("ping6 -L -I " + device + " ff02::1 -c 2").read())
+
+  found = []
+  for (addr,ms) in addresses:
+    host = hosts_by_addr.get(addr)
+    if host is not None:
+      host['ms'] = float(ms)
+      found.append(host)
+
+  # Clear screen
+  os.system("clear")
+
+  print("%i Hosts found\n" % len(found))
+
+  for host in found:
+    print("%-27s %0.3f %s" % (host['ansible_ssh_host'], host['ms'], host['node_name']))
+
+  time.sleep(1)
