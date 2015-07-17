@@ -1,14 +1,6 @@
 ---
-- name: Fetch release
-  raw: cat /lib/gluon/release
-  register: gluon_release
-
-- name: Fetch model
-  raw: cat /tmp/sysinfo/model
-  register: model
-
-- debug: var=gluon_release.stdout_lines[0]
-- debug: var=model.stdout_lines[0]
+- name: Fetch gluon facts
+  gluon: facts
 
 - include: upgrade.yml
-  when: '"TL-WDR" in model.stdout_lines[0] and gluon_release.stdout_lines[0] in firmware_old'
+  when: '"TL-WDR" in hardware.model and software.firmware.release in firmware_old'
