@@ -6,18 +6,18 @@
   - restart wifi
 
 - name: apply wifi24 txpower
-  uci: set wireless.radio0.txpower={{radio24_txpower}}
+  uci: set wireless.radio0.txpower=1
   tags: txpower
   notify:
   - restart wifi
 
 - name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{channels_5 | shuffle | first}}
+  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
   notify:
   - restart wifi
 
 - name: apply wifi5 txpower
-  uci: set wireless.radio1.txpower={{radio5_txpower}}
+  uci: set wireless.radio1.txpower=12
   tags: txpower
   notify:
   - restart wifi
@@ -31,3 +31,12 @@
 - name: apply wifi regdom
   raw: iw reg set US
   tags: regdom
+  notify:
+  - restart wifi
+
+- name: apply wifi5 country
+  uci: set wireless.radio1.country=US
+  tags: htmode
+  notify:
+  - restart wifi
+
