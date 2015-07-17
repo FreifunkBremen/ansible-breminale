@@ -4,6 +4,7 @@
 --
 
 require("uci")
+json = require 'luci.json'
 x = uci.cursor()
 
 fail = function (msg)
@@ -76,10 +77,38 @@ if command=="set" then
   x:commit(config)
   changed(true)
 
+elseif command=="get_sections" then
+  config, typ = string.match(args, "^([^\.]+)\.([^\.]+)$")
+
+  result = {}
+
+  x:foreach(config, typ,
+    function (section)
+      local t = {}
+      local name
+      for key,value in pairs(section) do
+        if key==".name" then
+          name = value
+        else
+          t[key] = value
+        end
+      end
+      if name then
+        result[name] = t
+      end
+    end
+  )
+
+  print(json.encode(result))
+
 elseif command=="get" then
   config, section, option = string.match(args, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
-  value = x:get(config, section, option)
-  print('{"changed": false, "ansible_facts": {"'..config..'": {"'..section..'": {"'..option..'": "'..value..'"}}}}')
+  result = {}
+
+  result["value"] = x:get(config, section, option)
+
+  print(json.encode(result))
+
 else
   fail("unsupported command: " .. command)
 end
