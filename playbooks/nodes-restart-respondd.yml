@@ -3,9 +3,12 @@
 - hosts: nodes
   gather_facts: no
   tasks:
-  - raw: pgrep respondd
+  - raw: "pgrep respondd"
     register: pgrep
-    ignore_errors: True
+    ignore_errors: yes
 
-  - raw: /etc/init.d/respondd start
+  #show data
+  - debug: var=pgrep.rc 
+
+  - raw: reboot
     when: pgrep.rc != 0
