@@ -1,0 +1,35 @@
+#!/usr/bin/lua
+
+-- read input
+f = io.open(arg[1], "r")
+command = f:read("*all")
+f:close()
+
+fail = function (msg)
+  print('{"failed": true, "msg": "' .. msg .. '"}')
+  os.exit(1)
+end
+
+if command == "facts" then
+  local announce = require 'gluon.announce'
+  local json = require 'luci.json'
+  local util = require 'luci.util'
+  local sys = require 'luci.sys'
+
+  uname  = {}
+  result = {}
+  result["ansible_facts"] = announce.collect_dir("/lib/gluon/announce/nodeinfo.d")
+
+
+  local function unameArg(arg)
+    return util.trim(sys.exec("uname " .. arg))
+  end
+
+  uname.machine = unameArg("-m")
+  uname.version = unameArg("-v")
+  result.uname  = uname
+
+  print(json.encode(result))
+else
+  fail("unsupported command: " .. command)
+end
