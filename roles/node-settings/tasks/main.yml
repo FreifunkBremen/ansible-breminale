@@ -6,19 +6,19 @@
   - restart wifi
 
 - name: apply wifi24 txpower
-  uci: set wireless.radio0.txpower=1
+  uci: set wireless.radio0.txpower=0
   tags: txpower
-  notify:
-  - restart wifi
-
-- name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
   notify:
   - restart wifi
 
 - name: apply wifi5 txpower
   uci: set wireless.radio1.txpower=12
   tags: txpower
+  notify:
+  - restart wifi
+
+- name: apply wifi5 channel
+  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
   notify:
   - restart wifi
 
