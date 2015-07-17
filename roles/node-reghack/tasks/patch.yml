@@ -3,4 +3,4 @@
   action: copy_unsafe src=reghack.mips.elf dest=/tmp/
 
 - name: Apply Patch
-  raw: /tmp/reghack.mips.elf /lib/modules/*/cfg80211.ko && reboot
+  raw: /tmp/reghack.mips.elf /lib/modules/*/cfg80211.ko; reboot
