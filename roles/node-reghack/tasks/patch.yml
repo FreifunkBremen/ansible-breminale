@@ -1,6 +1,6 @@
 ---
 - name: Upload Patch
-  action: copy_unsafe src=reghack.mips.elf dest=/tmp/
+  action: copy_unsafe src=reghack.{{uname.machine}}.elf dest=/tmp/reghack.elf
 
 - name: Apply Patch
-  raw: /tmp/reghack.mips.elf /lib/modules/*/cfg80211.ko; reboot
+  raw: /tmp/reghack.elf /lib/modules/*/cfg80211.ko; reboot

@@ -1,10 +1,6 @@
 ---
-- name: Fetch cpuinfo
-  raw: "cat /proc/cpuinfo"
-  register: cpuinfo
-
-- name: show cpuinfo
-  debug: var=cpuinfo.stdout
+- name: Fetch gluon facts
+  gluon: facts
 
 - name: Fetch iw reg
   raw: iw reg set US && iw reg get
@@ -15,4 +11,4 @@
 
 - name: Include patch
   include: patch.yml
-  when: '"mips" in cpuinfo.stdout and "DFS-UNSET" not in iw_reg.stdout'
+  when: '"TL-WDR" in hardware.model and "DFS-UNSET" not in iw_reg.stdout'
