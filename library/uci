@@ -7,16 +7,12 @@ json = require('luci.json')
 uci  = require("uci").cursor()
 
 fail = function (msg)
-  print('{"failed": true, "msg": "' .. msg .. '"}')
+  print(json.encode({failed=true, msg=msg}))
   os.exit(1)
 end
 
-changed = function (value)
-  if value then
-    print('{"changed": true}')
-  else
-    print('{"changed": false}')
-    end
+changed = function (changed)
+  print(json.encode({changed=changed}))
   os.exit(0)
 end
 
@@ -102,11 +98,9 @@ elseif command=="get_sections" then
 
 elseif command=="get" then
   config, section, option = string.match(args, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
-  result = {}
+  result = uci:get(config, section, option)
 
-  result["value"] = uci:get(config, section, option)
-
-  print(json.encode(result))
+  print(json.encode({value=result}))
 
 else
   fail("unsupported command: " .. command)
