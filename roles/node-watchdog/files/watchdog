@@ -1,11 +1,14 @@
 #!/usr/bin/lua
+#
+# Enables or disables bremen.freifunk.net depending on
+# whether the gateway is reachable
+#
 
 uci = require("uci").cursor()
 
-iface     = "eth0.1"
 gateway   = "2a00:c380:dead::1"
 ssid      = "bremen.freifunk.net"
-ping      = os.execute("ping6 -I "..iface.." -c 2 "..gateway)
+ping      = os.execute("ping6 -c 2 "..gateway)
 reachable = ping==0
 enabled   = uci:get("wireless", "client_radio0", "disabled") ~= "1"
 
