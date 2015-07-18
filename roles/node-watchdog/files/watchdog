@@ -1,0 +1,24 @@
+#!/usr/bin/lua
+
+uci = require("uci").cursor()
+
+iface     = "eth0.1"
+gateway   = "2a00:c380:dead::1"
+ssid      = "bremen.freifunk.net"
+ping      = os.execute("ping6 -I "..iface.." -c 2 "..gateway)
+reachable = ping==0
+enabled   = uci:get("wireless", "client_radio0", "disabled") ~= "1"
+
+if reachable ~= enabled then
+  print("state changed")
+
+  uci:foreach("wireless", "wifi-iface",
+    function(s)
+      if s['ssid'] == ssid then
+        uci:set("wireless", s['.name'], "disabled", reachable and '0' or '1')
+      end
+  end)
+
+  uci:commit("wireless")
+  os.execute("wifi")
+end

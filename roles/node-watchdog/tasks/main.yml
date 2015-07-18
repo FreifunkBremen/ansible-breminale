@@ -1,0 +1,5 @@
+- name: Upload Watchdog
+  action: copy_unsafe src=watchdog dest=/usr/local/
+
+- name: Upload crontab
+  action: copy_unsafe src=crontab dest=/etc/crontabs/root
