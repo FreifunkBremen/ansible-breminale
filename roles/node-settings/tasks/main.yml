@@ -12,13 +12,13 @@
   - restart wifi
 
 - name: apply wifi5 txpower
-  uci: set wireless.radio1.txpower=12
+  uci: set wireless.radio1.txpower=15
   tags: txpower
   notify:
   - restart wifi
 
 - name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{ channels_5 | shuffle | first }}
+  uci: set wireless.radio1.channel={{radio5_channel}}
   notify:
   - restart wifi
 
