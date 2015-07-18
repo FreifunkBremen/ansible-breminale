@@ -40,3 +40,9 @@
   notify:
   - restart wifi
 
+- name: primary mgmt network 5ghz only
+  uci: set wireless.mgmt_radio0.ssid=mgmt.ffhb.de-legacy
+  tags: mgmt
+  notify:
+  - restart wifi
+
