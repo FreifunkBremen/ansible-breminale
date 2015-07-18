@@ -3,9 +3,8 @@
 -- Ansible module for LUCI
 --
 
-require("uci")
-json = require 'luci.json'
-x = uci.cursor()
+json = require('luci.json')
+uci  = require("uci").cursor()
 
 fail = function (msg)
   print('{"failed": true, "msg": "' .. msg .. '"}')
@@ -57,24 +56,24 @@ if command=="set" then
 
   if config and section then
     -- create section
-    if x:get(config, section) then
+    if uci:get(config, section) then
       changed(false)
     end
-    x:set(config, section, value)
+    uci:set(config, section, value)
   else
     -- set value in existing section
     config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
-    old = x:get(config, section, option)
+    old = uci:get(config, section, option)
     if old == value then
       changed(false)
     end
-    if not x:get(config, section) then
+    if not uci:get(config, section) then
       fail("section " .. section .. " not found")
     end
-    x:set(config, section, option, value)
+    uci:set(config, section, option, value)
   end
 
-  x:commit(config)
+  uci:commit(config)
   changed(true)
 
 elseif command=="get_sections" then
@@ -82,7 +81,7 @@ elseif command=="get_sections" then
 
   result = {}
 
-  x:foreach(config, typ,
+  uci:foreach(config, typ,
     function (section)
       local t = {}
       local name
@@ -105,7 +104,7 @@ elseif command=="get" then
   config, section, option = string.match(args, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
   result = {}
 
-  result["value"] = x:get(config, section, option)
+  result["value"] = uci:get(config, section, option)
 
   print(json.encode(result))
 
