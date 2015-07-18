@@ -1,8 +1,6 @@
 #!/usr/bin/lua
-#
-# Enables or disables bremen.freifunk.net depending on
-# whether the gateway is reachable
-#
+-- Enables or disables bremen.freifunk.net depending on
+-- whether the gateway is reachable
 
 uci = require("uci").cursor()
 
