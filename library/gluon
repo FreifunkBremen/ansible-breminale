@@ -27,7 +27,7 @@ if command == "facts" then
 
   uname.machine = unameArg("-m")
   uname.version = unameArg("-v")
-  result.uname  = uname
+  result["ansible_facts"]["uname"] = uname
 
   print(json.encode(result))
 else
