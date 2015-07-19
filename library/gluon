@@ -1,35 +1,29 @@
 #!/usr/bin/lua
 
 -- read input
-f = io.open(arg[1], "r")
-command = f:read("*all")
-f:close()
+local json    = require 'luci.json'
+local fs      = require 'nixio.fs'
+local command = fs.readfile(arg[1])
 
 fail = function (msg)
-  print('{"failed": true, "msg": "' .. msg .. '"}')
+  print(json.encode({failed=true, msg=msg}))
   os.exit(1)
 end
 
 if command == "facts" then
   local announce = require 'gluon.announce'
-  local json = require 'luci.json'
   local util = require 'luci.util'
   local sys = require 'luci.sys'
 
-  uname  = {}
-  result = {}
-  result["ansible_facts"] = announce.collect_dir("/lib/gluon/announce/nodeinfo.d")
-
+  facts = announce.collect_dir("/lib/gluon/announce/nodeinfo.d")
 
   local function unameArg(arg)
     return util.trim(sys.exec("uname " .. arg))
   end
 
-  uname.machine = unameArg("-m")
-  uname.version = unameArg("-v")
-  result["ansible_facts"]["uname"] = uname
+  facts["uname"] = {machine=unameArg("-m"), version=unameArg("-v")}
 
-  print(json.encode(result))
+  print(json.encode({ansible_facts=facts}))
 else
   fail("unsupported command: " .. command)
 end

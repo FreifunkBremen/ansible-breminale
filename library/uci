@@ -3,8 +3,10 @@
 -- Ansible module for LUCI
 --
 
-json = require('luci.json')
-uci  = require("uci").cursor()
+local json = require('luci.json')
+local fs   = require('nixio.fs')
+local uci  = require('uci').cursor()
+local line = fs.readfile(arg[1])
 
 fail = function (msg)
   print(json.encode({failed=true, msg=msg}))
@@ -15,11 +17,6 @@ changed = function (changed)
   print(json.encode({changed=changed}))
   os.exit(0)
 end
-
--- read input
-f = io.open(arg[1], "r")
-line = f:read("*all")
-f:close()
 
 -- split input into command and arguments
 i = string.find(line, " ")
