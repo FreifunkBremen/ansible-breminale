@@ -6,9 +6,17 @@ uci = require("uci").cursor()
 
 gateway   = "2a00:c380:dead::1"
 ssid      = "bremen.freifunk.net"
-ping      = os.execute("ping6 -c 2 "..gateway)
-reachable = ping==0
+attempts  = 3
 enabled   = uci:get("wireless", "client_radio0", "disabled") ~= "1"
+reachable = false
+
+-- Test reachability
+for i=1, attempts, 1 do
+  if os.execute("ping6 -n -c 1 "..gateway) == 0 then
+    reachable = true
+    break
+  end
+end
 
 if reachable ~= enabled then
   print("state changed")
