@@ -1,0 +1,10 @@
+# Configure radios
+---
+- name: Upload init script
+  local_action: command scp {{role_path}}/files/poe "root@[{{ansible_ssh_host}}]:/etc/init.d/"
+
+- name: Enable poe
+  raw: /etc/init.d/poe enable
+
+- name: Start poe
+  raw: /etc/init.d/poe start

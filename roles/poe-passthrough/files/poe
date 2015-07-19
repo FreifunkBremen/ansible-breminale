@@ -1,0 +1,16 @@
+#!/bin/sh /etc/rc.common
+# Example script
+# Copyright (C) 2007 OpenWrt.org
+
+START=10
+STOP=15
+
+start() {
+  echo 20  > /sys/class/gpio/export
+  echo out > /sys/class/gpio/gpio20/direction
+  echo 1   > /sys/class/gpio/gpio20/value
+}
+
+stop() {
+  echo 0   > /sys/class/gpio/gpio20/value
+}
