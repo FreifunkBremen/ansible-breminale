@@ -22,9 +22,8 @@ import ansible.constants as C
 import ansible.utils.template as template
 from ansible import errors
 from ansible.runner.return_data import ReturnData
-import base64
+from hashlib import sha512 as sha512
 import json
-import stat
 import tempfile
 import pipes
 
@@ -144,8 +143,6 @@ class ActionModule(object):
         dest = self.runner._remote_expand_user(conn, dest, tmp_path)
 
         for source_full, source_rel in source_files:
-            # Generate a hash of the local file.
-            local_checksum = utils.checksum(source_full)
 
             # This is kind of optimization - if user told us destination is
             # dir, do path manipulation right away, otherwise we still check
@@ -155,9 +152,16 @@ class ActionModule(object):
             else:
                 dest_file = conn.shell.join_path(dest)
 
-            conn.put_file(source_full, dest_file)
-            changed = True
+            # Generate a hash of the local file.
+            local_checksum = utils.checksum(source_full, hash_func=sha512)
 
+            # Generate a hash of the remote file.
+            returncode, _, stdout, _ = conn.exec_command("sha512sum %s" % pipes.quote(dest_file), "/tmp")
+
+            # Put file if hashes differ
+            if returncode != 0 or local_checksum != stdout.split(" ",2)[0]:
+                conn.put_file(source_full, dest_file)
+                changed = True
 
         if len(source_files) == 1:
             result =  {"changed": changed}
