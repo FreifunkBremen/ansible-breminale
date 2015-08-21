@@ -1,3 +1,4 @@
 ---
-firmware_old: ["2015.1.1+breminale1","2015.1.1+breminale2"]
-firmware_new: "2015.1.1+breminale3"
+firmware_old: ["2015.1.1+breminale1","2015.1.1+breminale2","2015.1.1+breminale3"]
+firmware_path: ~/project/ffhb/firmware_origin/stable
+firmware_new: 2014.4+bremen0
