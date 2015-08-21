@@ -5,8 +5,33 @@ Breminale-Ansible
 
 ### ~/.ssh/known_hosts aktualisieren (legacy)
 
-    ./update-hostkeys.py
+```bash
+./update-hostkeys.py
+```
 
-### Node-Settings aktualisieren
+### Node-Settings aktualisieren (All around Radio)
 
-    ansible-playbook playbooks/nodes-settings.yml -i nodes
+```bash
+ansible-playbook playbooks/nodes-settings.yml -i nodes
+```
+
+### Node-Info aktualisieren (Name, Geolocation)
+
+```bash
+ansible-playbook playbooks/nodes-settings.yml -i nodes
+```
+
+### Node-Upgrade/Flash
+
+#### From Nodes(-Cache/Monitoring)
+
+```bash
+ansible-playbook -i nodes playbooks/nodes-upgrade.yml
+```
+
+#### Link-Local Discovery
+
+```bash
+ ./scripts/discovery-write
+ ansible-playbook -i nodes_discovery playbooks/nodes-upgrade.yml
+```
