@@ -9,13 +9,14 @@ Breminale-Ansible
 ./update-hostkeys.py
 ```
 
-### Node-Settings aktualisieren (All around Radio)
+### Edit Nodes
+#### Node-Settings aktualisieren (All around Radio)
 
 ```bash
 ansible-playbook playbooks/nodes-settings.yml -i nodes
 ```
 
-### Node-Info aktualisieren (Name, Geolocation)
+#### Node-Info aktualisieren (Name, Geolocation)
 
 ```bash
 ansible-playbook playbooks/nodes-settings.yml -i nodes
@@ -34,4 +35,9 @@ ansible-playbook -i nodes playbooks/nodes-upgrade.yml
 ```bash
  ./scripts/discovery-write
  ansible-playbook -i nodes_discovery playbooks/nodes-upgrade.yml
+```
+or
+for complete automatic
+```bash
+ ansible-playbook -i nodes-link-local playbooks/nodes-upgrade.yml
 ```
