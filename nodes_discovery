@@ -1,0 +1,2 @@
+#!/usr/bin/sh
+cat /tmp/nodes_discovery.json
