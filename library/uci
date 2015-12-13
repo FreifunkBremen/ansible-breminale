@@ -3,20 +3,35 @@
 -- Ansible module for LUCI
 --
 
-local json = require('luci.json')
 local fs   = require('nixio.fs')
 local uci  = require('uci').cursor()
 local line = fs.readfile(arg[1])
 
-fail = function (msg)
-  print(json.encode({failed=true, msg=msg}))
+local ok, json = pcall(require,'luci.json')
+if ok then
+  -- Gluon 2015.1 and before
+  printJSON = function (obj)
+    print(json.encode(obj))
+  end
+else
+  -- Gluon 2015.2 and later
+  json = require('luci.jsonc')
+  printJSON = function (obj)
+    print(json.stringify(obj))
+  end
+end
+
+
+local fail = function (msg)
+  printJSON({failed=true, msg=msg})
   os.exit(1)
 end
 
-changed = function (changed)
-  print(json.encode({changed=changed}))
+local changed = function (changed)
+  printJSON({changed=changed})
   os.exit(0)
 end
+
 
 -- split input into command and arguments
 i = string.find(line, " ")
@@ -91,13 +106,13 @@ elseif command=="get_sections" then
     end
   )
 
-  print(json.encode(result))
+  printJSON(result)
 
 elseif command=="get" then
   config, section, option = string.match(args, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
   result = uci:get(config, section, option)
 
-  print(json.encode({value=result}))
+  printJSON({value=result})
 
 else
   fail("unsupported command: " .. command)
