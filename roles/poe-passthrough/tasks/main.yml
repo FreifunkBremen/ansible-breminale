@@ -1,7 +1,13 @@
-# Configure radios
+# Configure PoE passthrough
 ---
+- name: Fetch gluon facts
+  gluon: facts
+
+- fail: msg="unsupported model"
+  when: '"TP-Link CPE" not in hardware.model'
+
 - name: Upload init script
-  local_action: command scp {{role_path}}/files/poe "root@[{{ansible_ssh_host}}]:/etc/init.d/"
+  action: scp src=poe dest=/etc/init.d/
 
 - name: Enable poe
   raw: /etc/init.d/poe enable

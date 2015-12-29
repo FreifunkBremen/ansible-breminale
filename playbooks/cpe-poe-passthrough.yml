@@ -1,0 +1,5 @@
+---
+- hosts: nodes
+  gather_facts: no
+  roles:
+  - poe-passthrough
