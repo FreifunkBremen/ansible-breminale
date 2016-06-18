@@ -11,7 +11,7 @@ if not os.path.exists(cachedir):
 
 
 def load():
-  response = urllib.urlopen("http://monitoring2.breminale.ffhb.de/json/ansible")
+  response = urllib.urlopen("http://ffhb.h.sum7.de/api/aliases/ansible")
   body     = response.read()
   data     = json.loads(body)
 
