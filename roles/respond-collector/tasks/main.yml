@@ -1,0 +1,50 @@
+---
+- name: Set hostname
+  uci: set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
+  tags: hostname
+  when: node_name is defined
+
+- name: Set position
+  uci_batch: |
+    set "gluon-node-info.@location[0].latitude={{geo_latitude}}"
+    set "gluon-node-info.@location[0].longitude={{geo_longitude}}"
+    set "gluon-node-info.@location[0].share_location=1"
+    commit
+  tags: localtion
+  when: geo_latitude is defined and geo_longitude is defined
+
+- name: apply wifi24 txpower
+  uci: set wireless.radio0.txpower={{radio24_txpower}}
+  tags:
+    - txpower
+    - wifi
+  when: radio24_txpower is defined
+  notify:
+  - restart wifi
+
+- name: apply wifi24 channel
+  uci: set wireless.radio0.channel={{radio24_channel}}
+  tags:
+    - channel
+    - wifi
+  when: radio24_channel is defined
+  notify:
+  - restart wifi
+
+- name: apply wifi5 txpower
+  uci: set wireless.radio1.txpower={{radio5_txpower}}
+  tags:
+    - txpower
+    - wifi
+  when: radio5_txpower is defined
+  notify:
+  - restart wifi
+
+- name: apply wifi5 channel
+  uci: set wireless.radio1.channel={{radio5_channel}}
+  tags:
+    - channel
+    - wifi
+  when: radio5_channel is defined
+  notify:
+  - restart wifi
