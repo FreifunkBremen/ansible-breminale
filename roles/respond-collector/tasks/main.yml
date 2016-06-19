@@ -1,6 +1,9 @@
 ---
 - name: Set hostname
-  uci: set system.@system[0].hostname='{{node_name.replace(" ","-")}}'
+  uci_batch: |
+    set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
+    commit
+
   tags: hostname
   when: node_name is defined
 
