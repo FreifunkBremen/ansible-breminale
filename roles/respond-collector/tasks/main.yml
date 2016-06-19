@@ -1,6 +1,6 @@
 ---
 - name: Set hostname
-  uci: set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
+  uci: set system.@system[0].hostname='{{node_name.replace(" ","-")}}'
   tags: hostname
   when: node_name is defined
 
