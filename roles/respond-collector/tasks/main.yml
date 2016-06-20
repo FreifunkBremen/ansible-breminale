@@ -1,57 +1,65 @@
 ---
 - name: Set hostname
-  uci_batch: |
-    set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
-    commit
+  uci_batch: "{{cmd}}"
+  vars:
+    cmd: |
+      set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
+      commit
   tags: hostname
   when: node_name is defined
 
-- name: Update hostname in system
-  raw: echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname
+- name:  Update hostname
+  raw: "echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname"
   tags: hostname
   when: node_name is defined
 
 - name: Set position
-  uci_batch: |
-    set "gluon-node-info.@location[0].latitude={{geo_latitude}}"
-    set "gluon-node-info.@location[0].longitude={{geo_longitude}}"
-    set "gluon-node-info.@location[0].share_location=1"
-    commit
-  tags: localtion
+  uci_batch: "{{cmd}}"
+  vars:
+    cmd: |
+      set "gluon-node-info.@location[0].latitude={{geo_latitude}}"
+      set "gluon-node-info.@location[0].longitude={{geo_longitude}}"
+      set "gluon-node-info.@location[0].share_location=1"
+      commit
+  tags: location
   when: geo_latitude is defined and geo_longitude is defined
 
 - name: apply wifi24 txpower
-  uci: set wireless.radio0.txpower={{radio24_txpower}}
+  uci: "{{cmd}}"
+  vars: 
+   cmd: "set wireless.radio0.txpower={{radio24_txpower}}"
   tags:
     - txpower
     - wifi
   when: radio24_txpower is defined
-  notify:
-  - restart wifi
+  notify: restart wifi
 
 - name: apply wifi24 channel
-  uci: set wireless.radio0.channel={{radio24_channel}}
+  uci: "{{cmd}}"
+  vars: 
+    cmd: "set wireless.radio0.channel={{radio24_channel}}"
   tags:
     - channel
     - wifi
   when: radio24_channel is defined
-  notify:
-  - restart wifi
+  notify: restart wifi
 
 - name: apply wifi5 txpower
-  uci: set wireless.radio1.txpower={{radio5_txpower}}
+  uci: "{{cmd}}"
+  vars: 
+    cmd: "set wireless.radio1.txpower={{radio5_txpower}}"
   tags:
     - txpower
     - wifi
   when: radio5_txpower is defined
-  notify:
-  - restart wifi
+  notify: restart wifi
 
 - name: apply wifi5 channel
-  uci: set wireless.radio1.channel={{radio5_channel}}
+  uci: "{{cmd}}"
+  vars: 
+    cmd: "set wireless.radio1.channel={{radio5_channel}}"
   tags:
     - channel
     - wifi
   when: radio5_channel is defined
-  notify:
-  - restart wifi
+  notify: restart wifi

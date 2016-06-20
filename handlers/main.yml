@@ -2,8 +2,8 @@
 - name: uci commit
   raw: uci commit
 
+- name: update hostname
+  raw: "echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname"
+
 - name: restart wifi
   raw: wifi
-
-- name: update hostname
-  raw: echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname 
