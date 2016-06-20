@@ -3,7 +3,11 @@
   uci_batch: |
     set "system.@system[0].hostname={{node_name.replace(" ","-")}}"
     commit
+  tags: hostname
+  when: node_name is defined
 
+- name: Update hostname in system
+  raw: echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname
   tags: hostname
   when: node_name is defined
 
