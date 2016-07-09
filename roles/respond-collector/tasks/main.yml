@@ -14,6 +14,17 @@
   tags: hostname
   when: node_name is defined
 
+- name: Change owner
+  raw: "uci set gluon-node-info.@owner[0].contact={{owner}}"
+  tags: owner
+  when: owner is defined
+
+- name: Save owner
+  raw: "uci commit gluon-node-info"
+  tags: owner
+  when: owner is defined
+
+
 
 
 - name: Set position latitude
