@@ -3,9 +3,8 @@
 -- Ansible module for LUCI
 --
 
-local fs   = require('nixio.fs')
-local uci  = require('uci').cursor()
-local line = fs.readfile(arg[1])
+local fs  = require('nixio.fs')
+local uci = require('uci').cursor()
 
 local ok, json = pcall(require,'luci.json')
 if ok then
@@ -32,28 +31,44 @@ local changed = function (changed)
   os.exit(0)
 end
 
+local parseArgs = function(line)
+  local res = {}
+  local pos = 1
 
--- split input into command and arguments
-i = string.find(line, " ")
-if not i then
-  fail("unable to parse arguments")
+  while true do
+    local c = string.sub(line,pos,pos)
+    if (c == "") then break end
+
+    i = string.find(line, "=", pos)
+    local key = string.sub(line, pos, i-1)
+    pos = i+1
+
+    local startp,endp = string.find(line,'^%b""',pos*1)
+    local value = string.sub(line,startp+1, endp-1)
+    -- remove wrapping single quotes
+    if string.find(value, "^'.*'$")==1 then
+      value = string.sub(value, 2, -2)
+    end
+
+    pos = endp + 2
+    res[key] = value
+  end
+  return res
 end
-command = string.sub(line,0,i-1)
-args    = string.sub(line,i+1)
+
+-- parse arguments
+local args    = parseArgs(fs.readfile(arg[1]))
+local command = args["command"]
+local key     = args["key"]
+
+if not key then
+  fail("key is missing")
+end
 
 -- evaluate commands
 if command=="set" then
 
-  i = string.find(args, "=", i)
-  if not i then
-    fail("unable to parse key-value pair")
-  end
-  key   = string.sub(args,0,i-1)
-  value = string.sub(args,i+1)
-
-  if not key then
-    fail("key is missing")
-  end
+  value = args["value"]
 
   if not value then
     fail("value is missing")
@@ -71,6 +86,24 @@ if command=="set" then
   else
     -- set value in existing section
     config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
+
+    -- find section by index?
+    typ, index = string.match(section, "@(%a+)%[(%d+)%]")
+    if typ then
+      section = nil
+      index   = tonumber(index)
+      uci:foreach(config, typ,
+        function(s)
+          if s[".index"] == index then
+            section = s[".name"]
+          end
+        end
+      )
+      if not section then
+        fail("section " .. typ .. " with index " .. index .. " not found")
+      end
+    end
+
     old = uci:get(config, section, option)
     if old == value then
       changed(false)
@@ -85,7 +118,7 @@ if command=="set" then
   changed(true)
 
 elseif command=="get_sections" then
-  config, typ = string.match(args, "^([^\.]+)\.([^\.]+)$")
+  config, typ = string.match(key, "^([^\.]+)\.([^\.]+)$")
 
   result = {}
 
@@ -93,11 +126,11 @@ elseif command=="get_sections" then
     function (section)
       local t = {}
       local name
-      for key,value in pairs(section) do
-        if key==".name" then
-          name = value
+      for k,v in pairs(section) do
+        if k==".name" then
+          name = v
         else
-          t[key] = value
+          t[k] = v
         end
       end
       if name then
@@ -109,7 +142,7 @@ elseif command=="get_sections" then
   printJSON(result)
 
 elseif command=="get" then
-  config, section, option = string.match(args, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
+  config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
   result = uci:get(config, section, option)
 
   printJSON({value=result})
