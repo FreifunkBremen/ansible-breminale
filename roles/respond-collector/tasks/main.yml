@@ -1,11 +1,7 @@
 ---
 - name: Set hostname
-  uci: command=set key=gluon-node-info.@owner[0].hostname value={{node_name.replace(\" \",\"-\")}}"
-  tags: hostname
-  when: node_name is defined
-
-- name: Update hostname
-  raw: "echo $(uci get system.@system[0].hostname) > /proc/sys/kernel/hostname"
+  uci: command=set key=gluon-node-info.@system[0].hostname value="{{node_name.replace(\" \",\"-\")}}"
+  notify: update hostname
   tags: hostname
   when: node_name is defined
 
@@ -41,6 +37,7 @@
 
 - name: apply wifi24 txpower
   uci: command=set key=wireless.radio0.txpower value={{radio24_txpower}}
+  notify: wifi restart
   tags:
     - radio24
     - txpower
@@ -49,6 +46,7 @@
 
 - name: apply wifi24 channel
   uci: command=set key=wireless.radio0.channel value={{radio24_channel}}
+  notify: wifi restart
   tags:
     - radio24
     - channel
@@ -57,6 +55,7 @@
 
 - name: apply wifi5 txpower
   uci: command=set key=wireless.radio1.txpower value={{radio5_txpower}}
+  notify: wifi restart
   tags:
     - radio5
     - txpower
@@ -65,19 +64,9 @@
 
 - name: apply wifi5 channel
   uci: command=set key=wireless.radio1.channel value={{radio5_channel}}
+  notify: wifi restart
   tags:
     - radio5
     - channel
     - wifi
   when: radio5_channel is defined
-
-
-- name: Save position
-  raw: "wifi"
-  tags:
-  - radio5
-  - radio24
-  - wifi
-  - channel
-  - txpower
-  when: radio24_txpower is defined or radio24_channel is defined or radio5_txpower is defined or radio5_channel is defined
