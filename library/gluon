@@ -1,29 +1,26 @@
 #!/usr/bin/lua
 
 -- read input
-local json    = require 'luci.json'
+local json    = require 'luci.jsonc'
 local fs      = require 'nixio.fs'
-local command = fs.readfile(arg[1])
+local platform_info = require('platform_info')
+local util = require 'luci.util'
+local sys = require 'luci.sys'
 
 fail = function (msg)
-  print(json.encode({failed=true, msg=msg}))
+  print(json.stringify({failed=true, msg=msg}))
   os.exit(1)
 end
 
-if command == "facts" then
-  local announce = require 'gluon.announce'
-  local util = require 'luci.util'
-  local sys = require 'luci.sys'
 
-  facts = announce.collect_dir("/lib/gluon/announce/nodeinfo.d")
 
-  local function unameArg(arg)
-    return util.trim(sys.exec("uname " .. arg))
-  end
-
-  facts["uname"] = {machine=unameArg("-m"), version=unameArg("-v")}
-
-  print(json.encode({ansible_facts=facts}))
-else
-  fail("unsupported command: " .. command)
+local function unameArg(arg)
+  return util.trim(sys.exec("uname " .. arg))
 end
+facts = {}
+facts["gluon_release"] = util.trim(fs.readfile("/lib/gluon/release"))
+facts["image_name"]    = platform_info.get_image_name()
+facts["board_name"]    = platform_info.get_board_name()
+facts["uname"]         = {machine=unameArg("-m"), version=unameArg("-v")}
+
+print(json.stringify({ansible_facts=facts}))
