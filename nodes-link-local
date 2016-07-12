@@ -11,12 +11,12 @@ import re
 import os
 import subprocess
 
-iface    = os.environ.get('IFACE', "wlan0")
-output   = subprocess.check_output(["ping6","ff02::1%"+iface,"-Lnc 2"])
+iface = "enp0s25"
+output   = subprocess.check_output(["ping","-6","ff02::1%"+iface,"-Lnc 2"])
 nodes    = []
 hostvars = {}
 
-for host in re.findall('from ([\da-f:]+): ', output):
+for host in re.findall('from ([\da-f:]+)%'+iface+': ', output):
   name = host.split("fe80::",2)[1].replace(":","")
   nodes.append(name)
   hostvars[name] = {
