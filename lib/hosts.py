@@ -4,7 +4,7 @@ import os
 
 network   = "2a00:c380:dead::"
 cachedir  = os.path.dirname(os.path.abspath(__file__)) + "/../.cache"
-device    = os.environ.get('DEV', "1")
+device    = os.environ.get('DEV', "3")
 cachefile = cachedir+"/nodes.json"
 
 if not os.path.exists(cachedir):

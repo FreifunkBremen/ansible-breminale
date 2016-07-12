@@ -1,11 +1,6 @@
 ---
 - name: Set hostname
-  raw: "uci set system.@system[0].hostname={{node_name.replace(\" \",\"-\")}}"
-  tags: hostname
-  when: node_name is defined
-
-- name: Save hostname
-  raw: "uci commit system"
+  uci: command=set key=gluon-node-info.@owner[0].hostname value={{node_name.replace(\" \",\"-\")}}"
   tags: hostname
   when: node_name is defined
 
@@ -15,12 +10,7 @@
   when: node_name is defined
 
 - name: Change owner
-  raw: "uci set gluon-node-info.@owner[0].contact={{owner}}"
-  tags: owner
-  when: owner is defined
-
-- name: Save owner
-  raw: "uci commit gluon-node-info"
+  uci: command=set key=gluon-node-info.@owner[0].contact value={{owner}}
   tags: owner
   when: owner is defined
 
@@ -28,17 +18,17 @@
 
 
 - name: Set position latitude
-  raw: "uci set gluon-node-info.@location[0].latitude={{geo_latitude}}"
+  uci: command=set key=gluon-node-info.@location[0].latitude value={{geo_latitude}}
   tags: location
   when: geo_latitude is defined
 
 - name: Set position longitude
-  raw: "uci set gluon-node-info.@location[0].longitude={{geo_longitude}}"
+  uci: command=set key=gluon-node-info.@location[0].longitude value={{geo_longitude}}
   tags: location
   when: geo_longitude is defined
 
 - name: Enable position
-  raw: "uci set gluon-node-info.@location[0].share_location=1"
+  uci: command=set key=gluon-node-info.@location[0].share_location value=1
   tags: location
   when: geo_latitude is defined or geo_longitude is defined
 
@@ -50,7 +40,7 @@
 
 
 - name: apply wifi24 txpower
-  raw: "uci set wireless.radio0.txpower={{radio24_txpower}}"
+  uci: command=set key=wireless.radio0.txpower value={{radio24_txpower}}
   tags:
     - radio24
     - txpower
@@ -58,7 +48,7 @@
   when: radio24_txpower is defined
 
 - name: apply wifi24 channel
-  raw: "uci set wireless.radio0.channel={{radio24_channel}}"
+  uci: command=set key=wireless.radio0.channel value={{radio24_channel}}
   tags:
     - radio24
     - channel
@@ -66,7 +56,7 @@
   when: radio24_channel is defined
 
 - name: apply wifi5 txpower
-  raw: "uci set wireless.radio1.txpower={{radio5_txpower}}"
+  uci: command=set key=wireless.radio1.txpower value={{radio5_txpower}}
   tags:
     - radio5
     - txpower
@@ -74,7 +64,7 @@
   when: radio5_txpower is defined
 
 - name: apply wifi5 channel
-  raw: "uci set wireless.radio1.channel={{radio5_channel}}"
+  uci: command=set key=wireless.radio1.channel value={{radio5_channel}}
   tags:
     - radio5
     - channel
