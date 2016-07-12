@@ -1,6 +1,0 @@
----
-- name: Upload Patch
-  action: scp src=reghack.{{uname.machine}}.elf dest=/tmp/reghack.elf
-
-- name: Apply Patch
-  raw: /tmp/reghack.elf /lib/modules/*/cfg80211.ko; reboot

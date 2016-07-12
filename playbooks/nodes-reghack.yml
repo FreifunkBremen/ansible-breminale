@@ -1,6 +1,0 @@
-# ansible-playbook playbooks/nodes-reghack.yml -i nodes
----
-- hosts: nodes
-  gather_facts: no
-  roles:
-  - node-reghack
