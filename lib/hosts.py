@@ -12,7 +12,7 @@ if not os.path.exists(cachedir):
 
 
 def load():
-  response = urllib.urlopen("https://mgmt.ffhb.de/api/aliases/ansible")
+  response = urllib.urlopen("https://ffhb.h.sum7.de/api/aliases/ansible")
   body     = response.read()
   data     = json.loads(body)
 
@@ -22,8 +22,8 @@ def load():
 
   for id, value in data['_meta']['hostvars'].iteritems():
     # calculate link local address
-    m = hex((int(id.translate(' .:-'),16) ^ 0x020000000000) - 2 )[2:]
-    value['ansible_ssh_host'] = 'fe80::%s:%sff:fe%s:%s%%%s' %(m[:4],m[4:6],m[6:8],m[8:12], device)
+    m = hex((int(id.translate(' .:-'),16) ^ 0x020000000000) )[2:]
+    value['ansible_ssh_host'] = '2a06:8782:ffbb:1337:%s:%sff:fe%s:%s%%%s' %(m[:4],m[4:6],m[6:8],m[8:12], device)
 
   return data
 

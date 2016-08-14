@@ -1,6 +1,6 @@
 ---
 - name: Set hostname
-  uci: command=set key=system.@system[0].hostname value="SummerSounds-{{node_name.replace(\" \",\"-\")}}"
+  uci: command=set key=system.@system[0].hostname value="{{node_name_prefix}}{{node_name}}"
   notify: update hostname
   tags: hostname
   when: node_name is defined
@@ -35,9 +35,17 @@
 
 
 
+- name: apply wifi24 mesh
+  uci: command=set key=wireless.ibss_radio0.disabled value={{radio24_mesh_disabled}}
+  notify: restart wifi
+  tags:
+    - radio24
+    - mesh
+    - wifi
+  when: radio24_mesh_defined is defined
+
 - name: apply wifi24 txpower
-  uci: command=set key=wireless.radio0.txpower value={{radio24_txpower}}
-  notify: wifi restart
+  raw: iw dev client0 set txpower fixed {{radio24_txpower}}.0
   tags:
     - radio24
     - txpower
@@ -46,16 +54,25 @@
 
 - name: apply wifi24 channel
   uci: command=set key=wireless.radio0.channel value={{radio24_channel}}
-  notify: wifi restart
+  notify: restart wifi
   tags:
     - radio24
     - channel
     - wifi
   when: radio24_channel is defined
 
+
+- name: apply wifi5 mesh
+  uci: command=set key=wireless.ibss_radio0.disabled value={{radio5_mesh_disabled}}
+  notify: restart wifi
+  tags:
+    - radio5
+    - mesh
+    - wifi
+  when: radio5_mesh_disabled is defined
+
 - name: apply wifi5 txpower
-  uci: command=set key=wireless.radio1.txpower value={{radio5_txpower}}
-  notify: wifi restart
+  raw: iw dev client1 set txpower fixed {{radio5_txpower}}.0
   tags:
     - radio5
     - txpower
@@ -64,7 +81,7 @@
 
 - name: apply wifi5 channel
   uci: command=set key=wireless.radio1.channel value={{radio5_channel}}
-  notify: wifi restart
+  notify: restart wifi
   tags:
     - radio5
     - channel

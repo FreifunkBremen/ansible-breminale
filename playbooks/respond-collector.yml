@@ -3,4 +3,4 @@
 - hosts: nodes
   gather_facts: no
   roles:
-  - respond-collector
+  - respond-collector-dynwifi
