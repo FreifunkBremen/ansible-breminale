@@ -1,5 +1,0 @@
----
-- hosts: monitoring
-  roles:
-  - role: passenger
-  - role: monitoring

@@ -1,4 +1,0 @@
----
-- hosts: kvm
-  roles:
-  - role: kvm
