@@ -1,30 +1,34 @@
 ---
 - name: Set hostname
-  uci: command=set key=system.@system[0].hostname value="{{node_name_prefix}}{{node_name}}"
+  raw: uci set system.@system[0].hostname="{{node_name}}.{{node_name_suffix}}"; uci commit system
   notify: update hostname
   tags: hostname
   when: node_name is defined
 
 - name: Change owner
-  uci: command=set key=gluon-node-info.@owner[0].contact value={{owner}}
+  raw: uci set gluon-node-info.@owner[0].contact="{{owner}}"
   tags: owner
   when: owner is defined
 
 
-
+- name: set syslog
+  raw: uci set system.@system[0].log_ip="{{syslog}}"
+  notify: restart log
+  tags: syslog
+  when: syslog is defined
 
 - name: Set position latitude
-  uci: command=set key=gluon-node-info.@location[0].latitude value={{geo_latitude}}
+  raw: uci set gluon-node-info.@location[0].latitude="{{geo_latitude}}"
   tags: location
   when: geo_latitude is defined
 
 - name: Set position longitude
-  uci: command=set key=gluon-node-info.@location[0].longitude value={{geo_longitude}}
+  raw: uci set gluon-node-info.@location[0].longitude="{{geo_longitude}}"
   tags: location
   when: geo_longitude is defined
 
 - name: Enable position
-  uci: command=set key=gluon-node-info.@location[0].share_location value=1
+  raw: uci set gluon-node-info.@location[0].share_location=1
   tags: location
   when: geo_latitude is defined or geo_longitude is defined
 
@@ -36,7 +40,7 @@
 
 
 - name: apply wifi24 mesh
-  uci: command=set key=wireless.ibss_radio0.disabled value={{radio24_mesh_disabled}}
+  raw: uci set wireless.ibss_{{radio24}}.disabled="{{radio24_mesh_disabled}}"; uci commit wireless
   notify: restart wifi
   tags:
     - radio24
@@ -45,7 +49,7 @@
   when: radio24_mesh_defined is defined
 
 - name: apply wifi24 txpower
-  raw: iw dev client0 set txpower fixed {{radio24_txpower}}.0
+  raw: uci set wireless.{{radio24}}.txpower="{{radio24_txpower}}"; uci commit wireless
   tags:
     - radio24
     - txpower
@@ -53,7 +57,7 @@
   when: radio24_txpower is defined
 
 - name: apply wifi24 channel
-  uci: command=set key=wireless.radio0.channel value={{radio24_channel}}
+  raw: uci set wireless.{{radio24}}.channel="{{radio24_channel}}"; uci commit wireless
   notify: restart wifi
   tags:
     - radio24
@@ -63,7 +67,7 @@
 
 
 - name: apply wifi5 mesh
-  uci: command=set key=wireless.ibss_radio0.disabled value={{radio5_mesh_disabled}}
+  raw: uci set wireless.ibss_{{radio5}}.disabled="{{radio5_mesh_disabled}}"; uci commit wireless
   notify: restart wifi
   tags:
     - radio5
@@ -72,7 +76,7 @@
   when: radio5_mesh_disabled is defined
 
 - name: apply wifi5 txpower
-  raw: iw dev client1 set txpower fixed {{radio5_txpower}}.0
+  raw: uci set wireless.{{radio5}}.txpower="{{radio5_txpower}}"; uci commit wireless
   tags:
     - radio5
     - txpower
@@ -80,7 +84,7 @@
   when: radio5_txpower is defined
 
 - name: apply wifi5 channel
-  uci: command=set key=wireless.radio1.channel value={{radio5_channel}}
+  raw: uci set wireless.{{radio5}}.channel="{{radio5_channel}}"; uci commit wireless
   notify: restart wifi
   tags:
     - radio5

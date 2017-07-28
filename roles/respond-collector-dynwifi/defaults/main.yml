@@ -1,4 +1,6 @@
 ---
-node_name_prefix: SummerSounds-
+node_name_suffix: SummerSounds
 radio24_mesh_disabled: 1
 radio5_mesh_disabled: 1
+radio24: radio0
+radio5: radio1
