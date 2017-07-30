@@ -5,7 +5,7 @@
 # archer
 #   txpower 5Ghz max 20
 #
-nodes:
+msgan:
   vars:
     radio24_mesh_disabled: 1
     radio5_mesh_disabled: 1
@@ -32,6 +32,7 @@ nodes:
       geo_longitude: 8.779725730
       radio24_channel: 7
       radio5_channel: 44
+      radio5_mesh_disabled: 0
     box1-1:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:10ea
       owner: "box1-1 - Verein - bremen.freifunk.net"
@@ -123,3 +124,50 @@ nodes:
       geo_longitude: 8.779368997
       radio24_channel: 6
       radio5_channel: 112
+jurten:
+  vars:
+    radio24_channel: 6
+    radio24_mesh_disabled: 0
+    radio24_client_disabled: 1
+    radio5_channel: 44
+    radio5_mesh_disabled: 0
+    radio5_client_disabled: 1
+    node_name_suffix: "JurtenSommerCamp"
+    syslog: 2a06:8782:ffbb:1337::6e40:2
+  hosts:
+    cpe5-1:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:c6e9:84ff:feb0:cb42
+      owner: "cpe510-1 - Verein - bremen.freifunk.net"
+      node_name: strom
+      geo_latitude: 53.072829
+      geo_longitude: 8.789063
+      radio5: radio0
+      radio5_channel: 44
+    cpe5-2:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:c6e9:84ff:fef5:5e46
+      owner: "cpe510-2 (refuges) - Verein - bremen.freifunk.net"
+      node_name: baum
+      geo_latitude: 53.072829
+      geo_longitude: 8.789481
+      radio5: radio0
+      radio5_channel: 48
+    cpe5-3:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:c6e9:84ff:fef5:4aa6
+      owner: "cpe510-3 (refuges)- Verein - bremen.freifunk.net"
+      node_name: wand
+      geo_latitude: 53.072719
+      geo_longitude: 8.790221
+      radio5: radio0
+      radio5_channel: 48
+    c7-hs-1:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:a62b:b0ff:fecd:b4af
+      owner: "cpe510 - Verein - bremen.freifunk.net"
+      node_name: jurte
+      geo_latitude: 53.07263
+      geo_longitude: 8.790011
+      radio24: radio1
+      radio5: radio0
+      radio24_mesh_disabled: 1
+      radio5_mesh_disabled: 1
+      radio24_client_disabled: 0
+      radio5_client_disabled: 0

@@ -46,7 +46,16 @@
     - radio24
     - mesh
     - wifi
-  when: radio24_mesh_defined is defined
+  when: radio24_mesh_disabled is defined
+
+- name: apply wifi24 client
+  raw: uci set wireless.client_{{radio24}}.disabled="{{radio24_client_disabled}}"; uci commit wireless
+  notify: restart wifi
+  tags:
+    - radio24
+    - client
+    - wifi
+  when: radio24_client_disabled is defined
 
 - name: apply wifi24 txpower
   raw: uci set wireless.{{radio24}}.txpower="{{radio24_txpower}}"; uci commit wireless
@@ -74,6 +83,15 @@
     - mesh
     - wifi
   when: radio5_mesh_disabled is defined
+
+- name: apply wifi5 client
+  raw: uci set wireless.client_{{radio5}}.disabled="{{radio5_client_disabled}}"; uci commit wireless
+  notify: restart wifi
+  tags:
+    - radio5
+    - client
+    - wifi
+  when: radio5_client_disabled is defined
 
 - name: apply wifi5 txpower
   raw: uci set wireless.{{radio5}}.txpower="{{radio5_txpower}}"; uci commit wireless

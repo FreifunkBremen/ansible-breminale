@@ -1,6 +1,6 @@
 # ansible-playbook playbooks/nodes-infos.yml -i nodes
 ---
-- hosts: nodes
+- hosts: all
   gather_facts: no
   roles:
   - respond-collector-dynwifi
