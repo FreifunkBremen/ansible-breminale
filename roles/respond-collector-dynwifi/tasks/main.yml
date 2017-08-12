@@ -11,11 +11,21 @@
   when: owner is defined
 
 
+- name: Upload ssh-key
+  action: scp src=authorized_keys dest=/etc/dropbear/authorized_keys
+  tags: sshkey
+
 - name: set syslog
   raw: uci set system.@system[0].log_ip="{{syslog}}"
   notify: restart log
   tags: syslog
   when: syslog is defined
+
+- name: set syslog
+  raw: uci set system.@system[0].log_port="{{syslog_port}}"
+  notify: restart log
+  tags: syslog
+  when: syslog_port is defined
 
 - name: Set position latitude
   raw: uci set gluon-node-info.@location[0].latitude="{{geo_latitude}}"

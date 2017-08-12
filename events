@@ -5,7 +5,7 @@
 # archer
 #   txpower 5Ghz max 20
 #
-msgan:
+suso:
   vars:
     radio24_mesh_disabled: 1
     radio5_mesh_disabled: 1
@@ -13,32 +13,33 @@ msgan:
     radio5_channel: 44
     radio24_txpower: 4
     radio5_txpower: 12
-    syslog: 2a06:8782:ffbb:1337::6e40:2
-    node_name_suffix: "🌍 msgan.de"
+    syslog: 2a01:4f8:160:44d0::e9
+    syslog_port: 10001
+    node_name_suffix: "SummerSound.de"
   hosts:
-    box-next2uplink:
-      ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:19
-      owner: "box-next2uplink - Verein - bremen.freifunk.net"
-      node_name: klo1
-      geo_latitude: 53.086533759
-      geo_longitude: 8.779720366
-      radio24_channel: 3
-      radio5_channel: 40
     box-uplink:
       ansible_ssh_host: 2a06:8782:ffbb:1337:eade:27ff:fe58:ebe4
       owner: "box-uplink - Verein - bremen.freifunk.net"
-      node_name: klo2
-      geo_latitude: 53.086489457
-      geo_longitude: 8.779725730
+      node_name: kicher1
+      geo_latitude: 53.07113509246548
+      geo_longitude: 8.793375492
       radio24_channel: 7
       radio5_channel: 44
       radio5_mesh_disabled: 0
+    box-next2uplink:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:19
+      owner: "box-next2uplink - Verein - bremen.freifunk.net"
+      node_name: kicher2
+      geo_latitude: 53.07110930793102
+      geo_longitude: 8.7932950258255
+      radio24_channel: 3
+      radio5_channel: 40
     box1-1:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:10ea
       owner: "box1-1 - Verein - bremen.freifunk.net"
-      node_name: jurte1
-      geo_latitude: 53.086719824
-      geo_longitude: 8.779955059
+      node_name: hs-buehne1
+      geo_latitude: 53.07138649086744
+      geo_longitude: 8.792991936206818
       radio24_channel: 9
       radio5_channel: 48
       radio24_txpower: 8
@@ -46,9 +47,9 @@ msgan:
     box1-2:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef2:ff05
       owner: "box1-2 - Verein - bremen.freifunk.net"
-      node_name: jurte2
-      geo_latitude: 53.086670690
-      geo_longitude: 8.780006021
+      node_name: hs-buehne2
+      geo_latitude: 53.07134942581067
+      geo_longitude: 8.793032169342041
       radio24_channel: 13
       radio5_channel: 52
       radio24_txpower: 8
@@ -57,73 +58,67 @@ msgan:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef2:f263
       owner: "box2-1 - Verein - bremen.freifunk.net"
       node_name: buehne1
-      geo_latitude: 53.086836617
-      geo_longitude: 8.780154884
+      geo_latitude: 53.070366384
+      geo_longitude: 8.795440793
       radio24_channel: 1
       radio5_channel: 56
     box2-2:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:f19
       owner: "box2-2 - Verein - bremen.freifunk.net"
       node_name: buehne2
-      geo_latitude: 53.086839839
-      geo_longitude: 8.780208528
+      geo_latitude: 53.070334153
+      geo_longitude: 8.795529306
       radio24_channel: 5
       radio5_channel: 60
     box-end-1:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef2:ff50
       owner: "box-end-1 - Verein - bremen.freifunk.net"
-      node_name: stand-1
-      geo_latitude: 53.088511968
-      geo_longitude: 8.776032329
+      node_name: info1
+      geo_latitude: 53.070508202
+      geo_longitude: 8.793767095
       radio24_channel: 10
       radio5_channel: 64
     box-end-2:
-      # address maybe
-      ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:98
+      ansible_ssh_host: 2a06:8782:ffbb:1337:ea94:f6ff:fef3:e98
       owner: "box-end-2 - Verein - bremen.freifunk.net"
-      node_name: stand-2
-      geo_latitude: 53.088511968
-      geo_longitude: 8.776032329
+      node_name: info2
+      geo_latitude: 53.070446962
+      geo_longitude: 8.793885112
       radio24_channel: 8
       radio5_channel: 36
     archerbox-1:
       ansible_ssh_host: 2a06:8782:ffbb:1337:ee08:6bff:fe5d:489a
       owner: "frank H - Archer1"
-      node_name: schiff
-      geo_latitude: 53.088511968
-      geo_longitude: 8.776032329
+      node_name: jazz1
+      geo_latitude: 53.07068869553253
+      geo_longitude: 8.793380856513977
       radio24: radio1
       radio5: radio0
       radio24_channel: 11
       radio5_channel: 36
     archerbox-2:
-      ansible_ssh_host: 2a06:8782:ffbb:1337::ee08:6bff:fe5d:4813
+      ansible_ssh_host: 2a06:8782:ffbb:1337:ee08:6bff:fe5d:4813
       owner: "frank H - Archer2"
-      node_name: schiff-2
-      geo_latitude: 53.088511968
-      geo_longitude: 8.776032329
+      node_name: jazz2
+      geo_latitude: 53.0706596876295
+      geo_longitude: 8.79342645406723
       radio24_channel: 12
       radio5_channel: 104
       radio5_txpower: 10
-    genoarcher:
-      ansible_ssh_host: 2a06:8782:ffbb:1337:1ad6:c7ff:fe90:dd24
-      owner: "geno+ffhb@fireorbit.de"
-      node_name: goldencity
-      geo_latitude: 53.086259895
-      geo_longitude: 8.779368997
-      radio24: radio1
-      radio5: radio0
-      radio24_channel: 6
-      radio5_channel: 40
-      radio5_txpower: 10
-    cpe-1:
+    cpe-3:
       ansible_ssh_host: 2a06:8782:ffbb:1337:a62b:b0ff:feb1:52c
       owner: "cpe3 (vorstrasse) - Verein - bremen.freifunk.net"
-      node_name: cpe-1
-      geo_latitude: 53.086259895
-      geo_longitude: 8.779368997
+      node_name: buehne-cpe
+      geo_latitude: 53.070393781
+      geo_longitude: 8.795118928
       radio24_channel: 6
       radio5_channel: 112
+    cpe-4:
+      ansible_ssh_host: 2a06:8782:ffbb:1337:c6e9:84ff:feb0:a84a
+      owner: "cpe4 - Verein - bremen.freifunk.net"
+      node_name: info-cpe
+      geo_latitude: 53.070575887
+      geo_longitude: 8.793917298
 jurten:
   vars:
     radio24_channel: 6
