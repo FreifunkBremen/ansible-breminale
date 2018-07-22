@@ -10,5 +10,5 @@
   #show data
   - debug: var=pgrep.rc 
 
-  - raw: reboot
+  - raw: /etc/init.d/gluon-respondd restart
     when: pgrep.rc != 0

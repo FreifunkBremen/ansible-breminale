@@ -1,5 +1,2 @@
 - name: Upload Watchdog
   action: scp src=watchdog dest=/usr/bin/
-
-- name: Upload crontab
-  action: scp src=crontab dest=/etc/crontabs/root
