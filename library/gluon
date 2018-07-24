@@ -1,11 +1,10 @@
 #!/usr/bin/lua
 
 -- read input
-local json    = require 'luci.jsonc'
+local json    = require 'jsonc'
 local fs      = require 'nixio.fs'
 local platform_info = require('platform_info')
-local util = require 'luci.util'
-local sys = require 'luci.sys'
+local nixio   = require 'nixio'
 
 fail = function (msg)
   print(json.stringify({failed=true, msg=msg}))
@@ -14,13 +13,10 @@ end
 
 
 
-local function unameArg(arg)
-  return util.trim(sys.exec("uname " .. arg))
-end
 facts = {}
-facts["gluon_release"] = util.trim(fs.readfile("/lib/gluon/release"))
+facts["gluon_release"] = string.match(fs.readfile("/lib/gluon/release"), ".*%S")
 facts["image_name"]    = platform_info.get_image_name()
 facts["board_name"]    = platform_info.get_board_name()
-facts["uname"]         = {machine=unameArg("-m"), version=unameArg("-v")}
+facts["uname"]         = nixio.uname()
 
 print(json.stringify({ansible_facts=facts}))
