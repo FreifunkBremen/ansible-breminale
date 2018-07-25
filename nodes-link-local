@@ -11,7 +11,7 @@ import re
 import os
 import subprocess
 
-iface = "br-ffhb"
+iface = "enp0s31f6"
 output   = subprocess.check_output(["ping","-6","ff02::1%"+iface,"-Lnc 2"])
 nodes    = []
 hostvars = {}
