@@ -1,0 +1,9 @@
+---
+- name: disable wifictld module
+  raw: mv /usr/lib/respondd/wifictld.so /usr/lib/respondd/wifictld.bak
+  register: pgrep
+  ignore_errors: yes
+
+- name: restart respondd
+  raw: /etc/init.d/gluon-respondd restart
+  when: pgrep.rc == 0

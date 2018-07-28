@@ -1,152 +1,34 @@
-#!/usr/bin/lua
---
--- Ansible module for LUCI
---
+#!/bin/sh
+# wrapper for conditional setting of uci config
+# compare http://wiki.openwrt.org/doc/techref/uci
 
-local fs  = require('nixio.fs')
-local uci = require('uci').cursor()
+# TODO: add more docs, see http://docs.ansible.com/developing_modules.html
 
-local ok, json = pcall(require,'luci.json')
-if ok then
-  -- Gluon 2015.1 and before
-  printJSON = function (obj)
-    print(json.encode(obj))
-  end
+# parameters are command, key, value
+source ${1}
+
+unquoted_key="$(echo $key | sed -e s/\'//g)"
+unquoted_value="$(echo $value | sed -e s/\'//g)"
+
+# test if we need to apply a change
+case $command in
+    'set')
+        [ "$(uci get "$unquoted_key")" = "$value" ]
+        changed=$?
+        ;;
+    'add_list')
+        uci get "$unquoted_key" 2>/dev/null |grep -q "$value"
+        changed=$?
+        ;;
+esac
+
+if [ $changed -eq 0 ]
+then
+    echo -n '{"changed": false}'
 else
-  -- Gluon 2015.2 and later
-  json = require('luci.jsonc')
-  printJSON = function (obj)
-    print(json.stringify(obj))
-  end
-end
-
-
-local fail = function (msg)
-  printJSON({failed=true, msg=msg})
-  os.exit(1)
-end
-
-local changed = function (changed)
-  printJSON({changed=changed})
-  os.exit(0)
-end
-
-local parseArgs = function(line)
-  local res = {}
-  local pos = 1
-
-  while true do
-    local c = string.sub(line,pos,pos)
-    if (c == "") then break end
-
-    i = string.find(line, "=", pos)
-    local key = string.sub(line, pos, i-1)
-    pos = i+1
-
-    local startp,endp = string.find(line,'^%b""',pos*1)
-    local value = string.sub(line,startp+1, endp-1)
-    -- remove wrapping single quotes
-    if string.find(value, "^'.*'$")==1 then
-      value = string.sub(value, 2, -2)
-    end
-
-    pos = endp + 2
-    res[key] = value
-  end
-  return res
-end
-
--- parse arguments
-local args    = parseArgs(fs.readfile(arg[1]))
-local command = args["command"]
-local key     = args["key"]
-
-if not key then
-  fail("key is missing")
-end
-
--- evaluate commands
-if command=="set" then
-
-  value = args["value"]
-
-  if not value then
-    fail("value is missing")
-  end
-
-  -- split key
-  config, section = string.match(key, "^([^\.]+)\.([^\.]+)$")
-
-  if config and section then
-    -- create section
-    if uci:get(config, section) then
-      changed(false)
-    end
-    uci:set(config, section, value)
-  else
-    -- set value in existing section
-    config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
-
-    -- find section by index?
-    typ, index = string.match(section, "@(%a+)%[(%d+)%]")
-    if typ then
-      section = nil
-      index   = tonumber(index)
-      uci:foreach(config, typ,
-        function(s)
-          if s[".index"] == index then
-            section = s[".name"]
-          end
-        end
-      )
-      if not section then
-        fail("section " .. typ .. " with index " .. index .. " not found")
-      end
-    end
-
-    old = uci:get(config, section, option)
-    if old == value then
-      changed(false)
-    end
-    if not uci:get(config, section) then
-      fail("section " .. section .. " not found")
-    end
-    uci:set(config, section, option, value)
-  end
-
-  uci:commit(config)
-  changed(true)
-
-elseif command=="get_sections" then
-  config, typ = string.match(key, "^([^\.]+)\.([^\.]+)$")
-
-  result = {}
-
-  uci:foreach(config, typ,
-    function (section)
-      local t = {}
-      local name
-      for k,v in pairs(section) do
-        if k==".name" then
-          name = v
-        else
-          t[k] = v
-        end
-      end
-      if name then
-        result[name] = t
-      end
-    end
-  )
-
-  printJSON(result)
-
-elseif command=="get" then
-  config, section, option = string.match(key, "^([^\.]+)\.([^\.]+)\.([^\.]+)$")
-  result = uci:get(config, section, option)
-
-  printJSON({value=result})
-
-else
-  fail("unsupported command: " .. command)
-end
+    if [ -z "${_ansible_check_mode}" -o "${_ansible_check_mode}" = "False" ]
+    then
+        logger uci $(uci "${command}" ${unquoted_key}="${unquoted_value}")
+    fi
+    echo -n '{"changed": true, "msg": "executed uci '${command}' '${unquoted_key}'='${value}'"}'
+fi

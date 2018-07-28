@@ -3,4 +3,4 @@
   gluon: read=facts
 
 - include: upgrade.yml
-  when: 'gluon_release in firmware_old'
+  when: '"tl-wdr" in board_name and gluon_release in firmware_old'

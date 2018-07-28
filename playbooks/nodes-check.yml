@@ -1,0 +1,10 @@
+---
+- hosts: nodes
+  gather_facts: no
+  roles:
+    - role: nodes-tmp
+      tags: tmp
+    - role: nodes-respondd-restart
+      tags: respondd
+    - role: nodes-wifictld-reload
+      tags: wifictld

@@ -1,13 +1,14 @@
 ---
-firmware_new: gluon-next+bremen~breminale20180724-37
-
 firmware_old:
-- "gluon-next+bremen~breminale20180719-22"
-- "gluon-next+bremen~breminale20180720-24"
-- "gluon-next+bremen~breminale20180721-27"
-- "gluon-next+bremen~breminale20180721-28"
-- "gluon-next+bremen~breminale20180721-30"
-- "gluon-next+bremen~breminale20180722-31"
-- "gluon-next+bremen~breminale20180723-32"
-- "gluon-next+bremen~breminale20180723-35"
-- "gluon-next+bremen~breminale20180724-36"
+- "2015.1.1+breminale1"
+- "2015.1.1+breminale2"
+- "2015.1.1+breminale3"
+- "2016.1.5+breminale1"
+
+firmware_new: 2016.1.5+breminale2
+firmware_path: http://meshviewer.breminale.ffhb.de/data/firmware/
+
+# sha512sum
+firmware_checksums:
+- fcbd4151e8527d4e6665e90f283179644819af60daa84ef3d813583b540464267f566640febe7372d4acba02efa2689f976b0ea62278b3c4d5d76cfc4b63020e
+- e4fd122387d048fee69347d304797d206f8184ba5c107a4d5adab797f2416d0028a9bad52de452586cfc0c7c8102c5708c61a6422778a4f5cea324f451fb41d7

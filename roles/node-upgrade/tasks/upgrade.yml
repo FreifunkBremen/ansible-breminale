@@ -1,6 +1,18 @@
 ---
 - name: Upload firmware
-  local_action: command scp "{{firmware_path}}/gluon-ffhb-{{firmware_new}}-{{ image_name }}-sysupgrade.bin" "[{{ ansible_ssh_host }}]":/tmp/firmware.bin
+  raw: >
+    wget -q
+    "{{firmware_path}}/gluon-ffhb-{{firmware_new}}-{{ image_name }}-sysupgrade.bin"
+    -O /tmp/firmware.bin
+
+- name: Calculate checksum
+  raw: sha512sum /tmp/firmware.bin | cut -d ' ' -f1
+  register: checksum
+
+- name: Compare checksum
+  fail:
+    msg: "invalid checksum: {{checksum.stdout_lines[0]}}"
+  when: checksum.stdout_lines[0] not in firmware_checksums
 
 - name: Upgrade firmware
-  raw: "wait 30; sysupgrade -n /tmp/firmware.bin"
+  raw: sysupgrade -n /tmp/firmware.bin

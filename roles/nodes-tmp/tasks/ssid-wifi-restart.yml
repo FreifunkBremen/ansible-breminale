@@ -1,0 +1,13 @@
+---
+- name: check ssids
+  raw: iw dev | grep -c ssid | grep 2
+  register: pgrep
+  ignore_errors: yes
+
+- name: debugging
+  debug: var=pgrep
+  when: pgrep.rc != 0
+
+- name: run wifi
+  raw: wifi
+  when: pgrep.rc != 0

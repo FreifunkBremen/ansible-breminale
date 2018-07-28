@@ -33,9 +33,8 @@ if args.list:
 		inventory["nodes"]["hosts"].append(nodeid)
 		inventory["_meta"]["hostvars"][nodeid] = { }
 		for address in node["addresses"]:
-			if "fe80:" in address:
-				continue
-			inventory["_meta"]["hostvars"][nodeid]["ansible_ssh_host"] = address
+			if "2a06:8782:ffbb:2018:" in address:
+				inventory["_meta"]["hostvars"][nodeid]["ansible_ssh_host"] = address
 elif args.host:
 	for node in data['nodes']:
 		if node["node_id"] == args.host:

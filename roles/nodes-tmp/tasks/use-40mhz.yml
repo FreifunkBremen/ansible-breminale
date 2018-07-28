@@ -1,0 +1,6 @@
+---
+- name: set 40MHz config
+  uci: command=set key=wireless.radio0.htmode value=VHT20
+  notify:
+    - uci commit
+    - restart wifi

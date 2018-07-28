@@ -1,0 +1,10 @@
+# restart respondd if not running
+---
+- name: check
+  raw: "pgrep respondd"
+  register: pgrep
+  ignore_errors: yes
+
+- name: restart
+  raw: /etc/init.d/gluon-respondd restart
+  when: pgrep.rc != 0

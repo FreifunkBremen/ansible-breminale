@@ -1,0 +1,9 @@
+---
+- name: check
+  raw: ubus call wifictld bind | grep -c \"
+  register: ubus
+  ignore_errors: yes
+
+- name: reload
+  raw: /etc/init.d/wifictld reload
+  when: (ubus.stdout | trim) == "1"

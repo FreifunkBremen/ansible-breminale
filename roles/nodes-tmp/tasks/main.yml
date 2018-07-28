@@ -1,0 +1,11 @@
+---
+- name: Fetch gluon facts
+  gluon: read=facts
+
+- include: respondd-wifictl-remove.yml
+#  when: '"c7" not in board_name'
+
+- include: ssid-wifi-restart.yml
+
+- include: use-40mhz.yml
+#  when: '"c7" in board_name'
