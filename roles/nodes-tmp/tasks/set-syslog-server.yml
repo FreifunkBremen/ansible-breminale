@@ -1,0 +1,6 @@
+---
+- name: set 40MHz config
+  uci: command=set key=system.@system[0].log_ip value=2a06:8782:ff00:0:5054:ff:fee4:808e
+  notify:
+    - uci commit
+    - restart log
